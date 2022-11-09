@@ -27,7 +27,7 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
     /kaggle/input/house-prices-advanced-regression-techniques/data_description.txt
     /kaggle/input/house-prices-advanced-regression-techniques/train.csv
     /kaggle/input/house-prices-advanced-regression-techniques/test.csv
-
+    
 
 <a id="description"></a>
 # Data description
@@ -560,8 +560,6 @@ SaleCondition: Condition of sale
 
 
 ```python
-import pandas as pd
-import numpy as np
 from matplotlib import pyplot as plt
 import seaborn as sns
 import plotly.express as px
@@ -575,7 +573,514 @@ warnings.filterwarnings("ignore")
 ```python
 # Load train dataframe
 train=pd.read_csv("../input/house-prices-advanced-regression-techniques/train.csv")
-train.head()
+print(train.shape)
+```
+
+    (1460, 81)
+    
+
+
+```python
+# Load train dataframe
+test=pd.read_csv("../input/house-prices-advanced-regression-techniques/test.csv")
+test.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Id</th>
+      <th>MSSubClass</th>
+      <th>MSZoning</th>
+      <th>LotFrontage</th>
+      <th>LotArea</th>
+      <th>Street</th>
+      <th>Alley</th>
+      <th>LotShape</th>
+      <th>LandContour</th>
+      <th>Utilities</th>
+      <th>...</th>
+      <th>ScreenPorch</th>
+      <th>PoolArea</th>
+      <th>PoolQC</th>
+      <th>Fence</th>
+      <th>MiscFeature</th>
+      <th>MiscVal</th>
+      <th>MoSold</th>
+      <th>YrSold</th>
+      <th>SaleType</th>
+      <th>SaleCondition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1461</td>
+      <td>20</td>
+      <td>RH</td>
+      <td>80.0</td>
+      <td>11622</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>120</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>MnPrv</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1462</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>81.0</td>
+      <td>14267</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Gar2</td>
+      <td>12500</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1463</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>74.0</td>
+      <td>13830</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>MnPrv</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1464</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>78.0</td>
+      <td>9978</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1465</td>
+      <td>120</td>
+      <td>RL</td>
+      <td>43.0</td>
+      <td>5005</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>HLS</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>144</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 80 columns</p>
+</div>
+
+
+
+As I want to prepare all the data to future exploration and analysis I'll join two dataframes and split them after preparation. So, I need to remember that test dataframe has ids 1461 and above and has no 'SalePrice' column.
+
+
+```python
+# Add 'SalePrice' column with 0 values
+test['SalePrice'] = 0
+
+# Check for df's shape
+test.shape
+```
+
+
+
+
+    (1459, 81)
+
+
+
+
+```python
+# Append train df with test df
+df = train.append(test)
+
+# Check for df's shape
+df.shape
+```
+
+
+
+
+    (2919, 81)
+
+
+
+Now we have common dataframe to work with. Let's continue
+
+Explore dataframe
+
+
+```python
+df.info()
+```
+
+    <class 'pandas.core.frame.DataFrame'>
+    Int64Index: 2919 entries, 0 to 1458
+    Data columns (total 81 columns):
+     #   Column         Non-Null Count  Dtype  
+    ---  ------         --------------  -----  
+     0   Id             2919 non-null   int64  
+     1   MSSubClass     2919 non-null   int64  
+     2   MSZoning       2915 non-null   object 
+     3   LotFrontage    2433 non-null   float64
+     4   LotArea        2919 non-null   int64  
+     5   Street         2919 non-null   object 
+     6   Alley          198 non-null    object 
+     7   LotShape       2919 non-null   object 
+     8   LandContour    2919 non-null   object 
+     9   Utilities      2917 non-null   object 
+     10  LotConfig      2919 non-null   object 
+     11  LandSlope      2919 non-null   object 
+     12  Neighborhood   2919 non-null   object 
+     13  Condition1     2919 non-null   object 
+     14  Condition2     2919 non-null   object 
+     15  BldgType       2919 non-null   object 
+     16  HouseStyle     2919 non-null   object 
+     17  OverallQual    2919 non-null   int64  
+     18  OverallCond    2919 non-null   int64  
+     19  YearBuilt      2919 non-null   int64  
+     20  YearRemodAdd   2919 non-null   int64  
+     21  RoofStyle      2919 non-null   object 
+     22  RoofMatl       2919 non-null   object 
+     23  Exterior1st    2918 non-null   object 
+     24  Exterior2nd    2918 non-null   object 
+     25  MasVnrType     2895 non-null   object 
+     26  MasVnrArea     2896 non-null   float64
+     27  ExterQual      2919 non-null   object 
+     28  ExterCond      2919 non-null   object 
+     29  Foundation     2919 non-null   object 
+     30  BsmtQual       2838 non-null   object 
+     31  BsmtCond       2837 non-null   object 
+     32  BsmtExposure   2837 non-null   object 
+     33  BsmtFinType1   2840 non-null   object 
+     34  BsmtFinSF1     2918 non-null   float64
+     35  BsmtFinType2   2839 non-null   object 
+     36  BsmtFinSF2     2918 non-null   float64
+     37  BsmtUnfSF      2918 non-null   float64
+     38  TotalBsmtSF    2918 non-null   float64
+     39  Heating        2919 non-null   object 
+     40  HeatingQC      2919 non-null   object 
+     41  CentralAir     2919 non-null   object 
+     42  Electrical     2918 non-null   object 
+     43  1stFlrSF       2919 non-null   int64  
+     44  2ndFlrSF       2919 non-null   int64  
+     45  LowQualFinSF   2919 non-null   int64  
+     46  GrLivArea      2919 non-null   int64  
+     47  BsmtFullBath   2917 non-null   float64
+     48  BsmtHalfBath   2917 non-null   float64
+     49  FullBath       2919 non-null   int64  
+     50  HalfBath       2919 non-null   int64  
+     51  BedroomAbvGr   2919 non-null   int64  
+     52  KitchenAbvGr   2919 non-null   int64  
+     53  KitchenQual    2918 non-null   object 
+     54  TotRmsAbvGrd   2919 non-null   int64  
+     55  Functional     2917 non-null   object 
+     56  Fireplaces     2919 non-null   int64  
+     57  FireplaceQu    1499 non-null   object 
+     58  GarageType     2762 non-null   object 
+     59  GarageYrBlt    2760 non-null   float64
+     60  GarageFinish   2760 non-null   object 
+     61  GarageCars     2918 non-null   float64
+     62  GarageArea     2918 non-null   float64
+     63  GarageQual     2760 non-null   object 
+     64  GarageCond     2760 non-null   object 
+     65  PavedDrive     2919 non-null   object 
+     66  WoodDeckSF     2919 non-null   int64  
+     67  OpenPorchSF    2919 non-null   int64  
+     68  EnclosedPorch  2919 non-null   int64  
+     69  3SsnPorch      2919 non-null   int64  
+     70  ScreenPorch    2919 non-null   int64  
+     71  PoolArea       2919 non-null   int64  
+     72  PoolQC         10 non-null     object 
+     73  Fence          571 non-null    object 
+     74  MiscFeature    105 non-null    object 
+     75  MiscVal        2919 non-null   int64  
+     76  MoSold         2919 non-null   int64  
+     77  YrSold         2919 non-null   int64  
+     78  SaleType       2918 non-null   object 
+     79  SaleCondition  2919 non-null   object 
+     80  SalePrice      2919 non-null   int64  
+    dtypes: float64(11), int64(27), object(43)
+    memory usage: 1.8+ MB
+    
+
+So, now we know that there are different data types and null values in our dataframe. First we need to get rid of null data. For this purposes check for the columns with null values.
+
+
+```python
+# Create function
+def where_is_null_values(df):
+    
+    # Create temporary series with number of null data cells
+    temp_df = df.isna().sum()
+
+    # Filter that series and get column's names with number of null cells
+    temp_df = temp_df[temp_df > 0]
+    
+    return temp_df.sort_values(ascending=False)
+
+# Launch our function
+where_is_null_values(df)
+```
+
+
+
+
+    PoolQC          2909
+    MiscFeature     2814
+    Alley           2721
+    Fence           2348
+    FireplaceQu     1420
+    LotFrontage      486
+    GarageFinish     159
+    GarageQual       159
+    GarageCond       159
+    GarageYrBlt      159
+    GarageType       157
+    BsmtExposure      82
+    BsmtCond          82
+    BsmtQual          81
+    BsmtFinType2      80
+    BsmtFinType1      79
+    MasVnrType        24
+    MasVnrArea        23
+    MSZoning           4
+    BsmtFullBath       2
+    BsmtHalfBath       2
+    Functional         2
+    Utilities          2
+    GarageArea         1
+    GarageCars         1
+    Electrical         1
+    KitchenQual        1
+    TotalBsmtSF        1
+    BsmtUnfSF          1
+    BsmtFinSF2         1
+    BsmtFinSF1         1
+    Exterior2nd        1
+    Exterior1st        1
+    SaleType           1
+    dtype: int64
+
+
+
+Now we have to examine each column and deside what to do with missing data.
+<br>First explore PoolQC
+
+
+```python
+# Get unique values from PoolQC column
+print(df['PoolQC'].unique())
+```
+
+    [nan 'Ex' 'Fa' 'Gd']
+    
+
+Here we can see that we have 3 unique values and nan values.<br>
+Go to data description and read 
+> PoolQC: Pool quality
+> 
+>    Ex   Excellent<br>
+>    Gd   Good<br>
+>    TA   Average/Typical<br>
+>    Fa   Fair<br>
+>    NA   No Pool 
+
+Now we understand that we need to replace Nan values with No Pool. <br>
+And we can do the same with 
+<br>Fence - No Fence, 
+<br>MiscFeature - None, 
+<br>GarageFinish - No Garage
+<br>GarageQual - No Garage
+<br>GarageCond - No Garage
+<br>GarageYrBlt  - No Garage
+<br>GarageType - No Garage
+<br>BsmtExposure - No Basement
+<br>BsmtCond - No Basement
+<br>BsmtQual - No Basement
+<br>BsmtFinType2 - No Basement
+<br>BsmtFinType1 - No Basement
+<br>FireplaceQu - No Fireplace
+<br>Alley - No alley access
+<br>MasVnrType - None 
+
+
+```python
+# Replace those null data 
+df['PoolQC'] = df['PoolQC'].fillna('No Pool')
+df['Fence'] = df['Fence'].fillna('No Fence') 
+df['MiscFeature'] = df['MiscFeature'].fillna('None') 
+df['GarageFinish'] = df['GarageFinish'].fillna('No Garage') 
+df['GarageQual'] = df['GarageQual'].fillna('No Garage') 
+df['GarageCond'] = df['GarageCond'].fillna('No Garage') 
+df['GarageYrBlt'] = df['GarageYrBlt'].fillna('No Garage') 
+df['GarageType'] = df['GarageType'].fillna('No Garage') 
+df['BsmtExposure'] = df['BsmtExposure'].fillna('No') 
+df['BsmtCond'] = df['BsmtCond'].fillna('No')
+df['BsmtQual'] = df['BsmtQual'].fillna('No')
+df['BsmtFinType2'] = df['BsmtExposure'].fillna('No')
+df['BsmtFinType1'] = df['BsmtFinType1'].fillna('No')
+df['FireplaceQu'] = df['FireplaceQu'].fillna('No Fireplace')
+df['Alley'] = df['Alley'].fillna('No alley access')
+df['MasVnrType'] = df['MasVnrType'].fillna('None')
+
+# Check for null values
+where_is_null_values(df)
+```
+
+
+
+
+    LotFrontage     486
+    MasVnrArea       23
+    MSZoning          4
+    BsmtFullBath      2
+    Utilities         2
+    Functional        2
+    BsmtHalfBath      2
+    GarageArea        1
+    GarageCars        1
+    KitchenQual       1
+    TotalBsmtSF       1
+    Electrical        1
+    BsmtUnfSF         1
+    BsmtFinSF2        1
+    BsmtFinSF1        1
+    Exterior2nd       1
+    Exterior1st       1
+    SaleType          1
+    dtype: int64
+
+
+
+LotFrontage column has numeric values. I'll replace missing values by median LotFrontage of neighborgood houses.
+
+
+```python
+# Replace missing values
+df["LotFrontage"] = df.groupby("Neighborhood")["LotFrontage"].transform(lambda x: x.fillna(x.median()))
+
+# Check for null values
+where_is_null_values(df)
+```
+
+
+
+
+    MasVnrArea      23
+    MSZoning         4
+    BsmtFullBath     2
+    Functional       2
+    BsmtHalfBath     2
+    Utilities        2
+    GarageArea       1
+    GarageCars       1
+    KitchenQual      1
+    TotalBsmtSF      1
+    Electrical       1
+    BsmtUnfSF        1
+    BsmtFinSF2       1
+    BsmtFinSF1       1
+    Exterior2nd      1
+    Exterior1st      1
+    SaleType         1
+    dtype: int64
+
+
+
+Much better. Now let's take a look 
+
+
+```python
+# Items that have ['GarageArea'] is nan
+df[df['GarageArea'].isna()]
 ```
 
 
@@ -624,272 +1129,76 @@ train.head()
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>1</td>
-      <td>60</td>
-      <td>RL</td>
-      <td>65.0</td>
-      <td>8450</td>
+      <th>1116</th>
+      <td>2577</td>
+      <td>70</td>
+      <td>RM</td>
+      <td>50.0</td>
+      <td>9060</td>
       <td>Pave</td>
-      <td>NaN</td>
+      <td>No alley access</td>
       <td>Reg</td>
       <td>Lvl</td>
       <td>AllPub</td>
       <td>...</td>
       <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>No Pool</td>
+      <td>MnPrv</td>
+      <td>None</td>
       <td>0</td>
-      <td>2</td>
-      <td>2008</td>
-      <td>WD</td>
-      <td>Normal</td>
-      <td>208500</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2</td>
-      <td>20</td>
-      <td>RL</td>
-      <td>80.0</td>
-      <td>9600</td>
-      <td>Pave</td>
-      <td>NaN</td>
-      <td>Reg</td>
-      <td>Lvl</td>
-      <td>AllPub</td>
-      <td>...</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0</td>
-      <td>5</td>
+      <td>3</td>
       <td>2007</td>
       <td>WD</td>
-      <td>Normal</td>
-      <td>181500</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>3</td>
-      <td>60</td>
-      <td>RL</td>
-      <td>68.0</td>
-      <td>11250</td>
-      <td>Pave</td>
-      <td>NaN</td>
-      <td>IR1</td>
-      <td>Lvl</td>
-      <td>AllPub</td>
-      <td>...</td>
+      <td>Alloca</td>
       <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0</td>
-      <td>9</td>
-      <td>2008</td>
-      <td>WD</td>
-      <td>Normal</td>
-      <td>223500</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>4</td>
-      <td>70</td>
-      <td>RL</td>
-      <td>60.0</td>
-      <td>9550</td>
-      <td>Pave</td>
-      <td>NaN</td>
-      <td>IR1</td>
-      <td>Lvl</td>
-      <td>AllPub</td>
-      <td>...</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0</td>
-      <td>2</td>
-      <td>2006</td>
-      <td>WD</td>
-      <td>Abnorml</td>
-      <td>140000</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>5</td>
-      <td>60</td>
-      <td>RL</td>
-      <td>84.0</td>
-      <td>14260</td>
-      <td>Pave</td>
-      <td>NaN</td>
-      <td>IR1</td>
-      <td>Lvl</td>
-      <td>AllPub</td>
-      <td>...</td>
-      <td>0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0</td>
-      <td>12</td>
-      <td>2008</td>
-      <td>WD</td>
-      <td>Normal</td>
-      <td>250000</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 81 columns</p>
+<p>1 rows × 81 columns</p>
 </div>
 
 
 
-Explore dataframe
+As we can see the is no garage, so we can fill in Nan values with zero. The same operation with GarageCars
 
 
 ```python
-train.shape
+# Replace missed values with 0
+df['GarageArea'] = df['GarageArea'].fillna(0)
+df['GarageCars'] = df['GarageCars'].fillna(0)
+
+# Check for null values
+where_is_null_values(df)
 ```
 
 
 
 
-    (1460, 81)
+    MasVnrArea      23
+    MSZoning         4
+    Utilities        2
+    BsmtFullBath     2
+    BsmtHalfBath     2
+    Functional       2
+    Exterior1st      1
+    Exterior2nd      1
+    BsmtFinSF1       1
+    BsmtFinSF2       1
+    BsmtUnfSF        1
+    TotalBsmtSF      1
+    Electrical       1
+    KitchenQual      1
+    SaleType         1
+    dtype: int64
 
 
 
-
-```python
-train.info()
-```
-
-    <class 'pandas.core.frame.DataFrame'>
-    RangeIndex: 1460 entries, 0 to 1459
-    Data columns (total 81 columns):
-     #   Column         Non-Null Count  Dtype  
-    ---  ------         --------------  -----  
-     0   Id             1460 non-null   int64  
-     1   MSSubClass     1460 non-null   int64  
-     2   MSZoning       1460 non-null   object 
-     3   LotFrontage    1201 non-null   float64
-     4   LotArea        1460 non-null   int64  
-     5   Street         1460 non-null   object 
-     6   Alley          91 non-null     object 
-     7   LotShape       1460 non-null   object 
-     8   LandContour    1460 non-null   object 
-     9   Utilities      1460 non-null   object 
-     10  LotConfig      1460 non-null   object 
-     11  LandSlope      1460 non-null   object 
-     12  Neighborhood   1460 non-null   object 
-     13  Condition1     1460 non-null   object 
-     14  Condition2     1460 non-null   object 
-     15  BldgType       1460 non-null   object 
-     16  HouseStyle     1460 non-null   object 
-     17  OverallQual    1460 non-null   int64  
-     18  OverallCond    1460 non-null   int64  
-     19  YearBuilt      1460 non-null   int64  
-     20  YearRemodAdd   1460 non-null   int64  
-     21  RoofStyle      1460 non-null   object 
-     22  RoofMatl       1460 non-null   object 
-     23  Exterior1st    1460 non-null   object 
-     24  Exterior2nd    1460 non-null   object 
-     25  MasVnrType     1452 non-null   object 
-     26  MasVnrArea     1452 non-null   float64
-     27  ExterQual      1460 non-null   object 
-     28  ExterCond      1460 non-null   object 
-     29  Foundation     1460 non-null   object 
-     30  BsmtQual       1423 non-null   object 
-     31  BsmtCond       1423 non-null   object 
-     32  BsmtExposure   1422 non-null   object 
-     33  BsmtFinType1   1423 non-null   object 
-     34  BsmtFinSF1     1460 non-null   int64  
-     35  BsmtFinType2   1422 non-null   object 
-     36  BsmtFinSF2     1460 non-null   int64  
-     37  BsmtUnfSF      1460 non-null   int64  
-     38  TotalBsmtSF    1460 non-null   int64  
-     39  Heating        1460 non-null   object 
-     40  HeatingQC      1460 non-null   object 
-     41  CentralAir     1460 non-null   object 
-     42  Electrical     1459 non-null   object 
-     43  1stFlrSF       1460 non-null   int64  
-     44  2ndFlrSF       1460 non-null   int64  
-     45  LowQualFinSF   1460 non-null   int64  
-     46  GrLivArea      1460 non-null   int64  
-     47  BsmtFullBath   1460 non-null   int64  
-     48  BsmtHalfBath   1460 non-null   int64  
-     49  FullBath       1460 non-null   int64  
-     50  HalfBath       1460 non-null   int64  
-     51  BedroomAbvGr   1460 non-null   int64  
-     52  KitchenAbvGr   1460 non-null   int64  
-     53  KitchenQual    1460 non-null   object 
-     54  TotRmsAbvGrd   1460 non-null   int64  
-     55  Functional     1460 non-null   object 
-     56  Fireplaces     1460 non-null   int64  
-     57  FireplaceQu    770 non-null    object 
-     58  GarageType     1379 non-null   object 
-     59  GarageYrBlt    1379 non-null   float64
-     60  GarageFinish   1379 non-null   object 
-     61  GarageCars     1460 non-null   int64  
-     62  GarageArea     1460 non-null   int64  
-     63  GarageQual     1379 non-null   object 
-     64  GarageCond     1379 non-null   object 
-     65  PavedDrive     1460 non-null   object 
-     66  WoodDeckSF     1460 non-null   int64  
-     67  OpenPorchSF    1460 non-null   int64  
-     68  EnclosedPorch  1460 non-null   int64  
-     69  3SsnPorch      1460 non-null   int64  
-     70  ScreenPorch    1460 non-null   int64  
-     71  PoolArea       1460 non-null   int64  
-     72  PoolQC         7 non-null      object 
-     73  Fence          281 non-null    object 
-     74  MiscFeature    54 non-null     object 
-     75  MiscVal        1460 non-null   int64  
-     76  MoSold         1460 non-null   int64  
-     77  YrSold         1460 non-null   int64  
-     78  SaleType       1460 non-null   object 
-     79  SaleCondition  1460 non-null   object 
-     80  SalePrice      1460 non-null   int64  
-    dtypes: float64(3), int64(35), object(43)
-    memory usage: 924.0+ KB
-
-
-Visualize correlation between numerical variables in "train" dataframe
+What about MasVnrArea? 
 
 
 ```python
-plt.figure(figsize=(10,10))
-sns.heatmap(train.corr(), cmap="RdBu")
-plt.title("Correlations Between Variables", size=15)
-plt.show()
-```
-
-
-    
-![png](output_12_0.png)
-    
-
-
-Create new dataframe using only columns which correlates to SalePrice
-
-
-```python
-# Create list of important columns
-important_num_cols = list(train.corr()["SalePrice"][(train.corr()["SalePrice"]>0.30) | (train.corr()["SalePrice"]<-0.30)].index)
-
-# Create list of Object type columns
-cat_cols = ["MSZoning", "Utilities","BldgType","Heating","KitchenQual","SaleCondition","LandSlope"]
-
-# Create dataframe
-important_cols = important_num_cols + cat_cols
-train_df = train[important_cols]
-
-train_df.head()
+# Items that have ['MasVnrArea'] is nan
+df[df['MasVnrArea'].isna()]
 ```
 
 
@@ -913,574 +1222,1036 @@ train_df.head()
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>LotFrontage</th>
-      <th>OverallQual</th>
-      <th>YearBuilt</th>
-      <th>YearRemodAdd</th>
-      <th>MasVnrArea</th>
-      <th>BsmtFinSF1</th>
-      <th>TotalBsmtSF</th>
-      <th>1stFlrSF</th>
-      <th>2ndFlrSF</th>
-      <th>GrLivArea</th>
-      <th>...</th>
-      <th>WoodDeckSF</th>
-      <th>OpenPorchSF</th>
-      <th>SalePrice</th>
+      <th>Id</th>
+      <th>MSSubClass</th>
       <th>MSZoning</th>
+      <th>LotFrontage</th>
+      <th>LotArea</th>
+      <th>Street</th>
+      <th>Alley</th>
+      <th>LotShape</th>
+      <th>LandContour</th>
       <th>Utilities</th>
-      <th>BldgType</th>
-      <th>Heating</th>
-      <th>KitchenQual</th>
+      <th>...</th>
+      <th>PoolArea</th>
+      <th>PoolQC</th>
+      <th>Fence</th>
+      <th>MiscFeature</th>
+      <th>MiscVal</th>
+      <th>MoSold</th>
+      <th>YrSold</th>
+      <th>SaleType</th>
       <th>SaleCondition</th>
-      <th>LandSlope</th>
+      <th>SalePrice</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>234</th>
+      <td>235</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>64.0</td>
+      <td>7851</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>5</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>216500</td>
+    </tr>
+    <tr>
+      <th>529</th>
+      <td>530</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>70.0</td>
+      <td>32668</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2007</td>
+      <td>WD</td>
+      <td>Alloca</td>
+      <td>200624</td>
+    </tr>
+    <tr>
+      <th>650</th>
+      <td>651</td>
+      <td>60</td>
+      <td>FV</td>
+      <td>65.0</td>
+      <td>8125</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>5</td>
+      <td>2008</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>205950</td>
+    </tr>
+    <tr>
+      <th>936</th>
+      <td>937</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>67.0</td>
+      <td>10083</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>8</td>
+      <td>2009</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>184900</td>
+    </tr>
+    <tr>
+      <th>973</th>
+      <td>974</td>
+      <td>20</td>
+      <td>FV</td>
+      <td>95.0</td>
+      <td>11639</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>12</td>
+      <td>2008</td>
+      <td>New</td>
+      <td>Partial</td>
+      <td>182000</td>
+    </tr>
+    <tr>
+      <th>977</th>
+      <td>978</td>
+      <td>120</td>
+      <td>FV</td>
+      <td>35.0</td>
+      <td>4274</td>
+      <td>Pave</td>
+      <td>Pave</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>11</td>
+      <td>2007</td>
+      <td>New</td>
+      <td>Partial</td>
+      <td>199900</td>
+    </tr>
+    <tr>
+      <th>1243</th>
+      <td>1244</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>107.0</td>
+      <td>13891</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>9</td>
+      <td>2006</td>
+      <td>New</td>
+      <td>Partial</td>
+      <td>465000</td>
+    </tr>
+    <tr>
+      <th>1278</th>
+      <td>1279</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>75.0</td>
+      <td>9473</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2008</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>237000</td>
+    </tr>
+    <tr>
+      <th>231</th>
+      <td>1692</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>64.0</td>
+      <td>12891</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>7</td>
+      <td>2009</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>246</th>
+      <td>1707</td>
+      <td>20</td>
+      <td>FV</td>
+      <td>90.0</td>
+      <td>7993</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>10</td>
+      <td>2009</td>
+      <td>New</td>
+      <td>Partial</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>422</th>
+      <td>1883</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>70.0</td>
+      <td>8749</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>11</td>
+      <td>2009</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>532</th>
+      <td>1993</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>64.0</td>
+      <td>7750</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2008</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>544</th>
+      <td>2005</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>87.0</td>
+      <td>10037</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>8</td>
+      <td>2008</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>581</th>
+      <td>2042</td>
+      <td>60</td>
+      <td>FV</td>
+      <td>72.5</td>
+      <td>7500</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2008</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>851</th>
+      <td>2312</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>59.0</td>
+      <td>15810</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>5</td>
+      <td>2007</td>
+      <td>New</td>
+      <td>Partial</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>865</th>
+      <td>2326</td>
+      <td>80</td>
+      <td>RL</td>
+      <td>64.0</td>
+      <td>11950</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>10</td>
+      <td>2007</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>880</th>
+      <td>2341</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>85.0</td>
+      <td>9965</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>9</td>
+      <td>2007</td>
+      <td>New</td>
+      <td>Partial</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>889</th>
+      <td>2350</td>
+      <td>60</td>
+      <td>FV</td>
+      <td>112.0</td>
+      <td>12217</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>12</td>
+      <td>2007</td>
+      <td>New</td>
+      <td>Partial</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>908</th>
+      <td>2369</td>
+      <td>120</td>
+      <td>FV</td>
+      <td>30.0</td>
+      <td>5330</td>
+      <td>Pave</td>
+      <td>Pave</td>
+      <td>IR2</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>7</td>
+      <td>2007</td>
+      <td>New</td>
+      <td>Partial</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1132</th>
+      <td>2593</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>68.0</td>
+      <td>8298</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>HLS</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>9</td>
+      <td>2007</td>
+      <td>New</td>
+      <td>Partial</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1197</th>
+      <td>2658</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>103.0</td>
+      <td>12867</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>7</td>
+      <td>2006</td>
+      <td>New</td>
+      <td>Partial</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1226</th>
+      <td>2687</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>49.0</td>
+      <td>15218</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>9</td>
+      <td>2006</td>
+      <td>New</td>
+      <td>Partial</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1402</th>
+      <td>2863</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>75.0</td>
+      <td>8050</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2006</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>23 rows × 81 columns</p>
+</div>
+
+
+
+Here we can see that items that have MasVnrArea is Nan also have MasVnrTyme None. So we can replace missing values with zero.
+
+
+```python
+# Replace missed values with 0
+df['MasVnrArea'] = df['MasVnrArea'].fillna(0)
+
+# Check for null values
+where_is_null_values(df)
+```
+
+
+
+
+    MSZoning        4
+    Utilities       2
+    BsmtFullBath    2
+    BsmtHalfBath    2
+    Functional      2
+    Exterior1st     1
+    Exterior2nd     1
+    BsmtFinSF1      1
+    BsmtFinSF2      1
+    BsmtUnfSF       1
+    TotalBsmtSF     1
+    Electrical      1
+    KitchenQual     1
+    SaleType        1
+    dtype: int64
+
+
+
+What about Bsmt's. Lets compouse dataframe with BsmtFullBath is nan
+
+
+```python
+# Show rows where BsmtFullBath has Nan value
+df[df['BsmtFullBath'].isna()]
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Id</th>
+      <th>MSSubClass</th>
+      <th>MSZoning</th>
+      <th>LotFrontage</th>
+      <th>LotArea</th>
+      <th>Street</th>
+      <th>Alley</th>
+      <th>LotShape</th>
+      <th>LandContour</th>
+      <th>Utilities</th>
+      <th>...</th>
+      <th>PoolArea</th>
+      <th>PoolQC</th>
+      <th>Fence</th>
+      <th>MiscFeature</th>
+      <th>MiscVal</th>
+      <th>MoSold</th>
+      <th>YrSold</th>
+      <th>SaleType</th>
+      <th>SaleCondition</th>
+      <th>SalePrice</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>660</th>
+      <td>2121</td>
+      <td>20</td>
+      <td>RM</td>
+      <td>99.0</td>
+      <td>5940</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>MnPrv</td>
+      <td>None</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2008</td>
+      <td>ConLD</td>
+      <td>Abnorml</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>728</th>
+      <td>2189</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>123.0</td>
+      <td>47007</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>...</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>7</td>
+      <td>2008</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 81 columns</p>
+</div>
+
+
+
+As we can see there is no basement in other columns (BsmtQual	BsmtCond	BsmtExposure etc.)
+
+
+```python
+# Replace those NaNs by zero
+df['BsmtFullBath'] = df['BsmtFullBath'].fillna(0)
+df['BsmtFinSF1'] = df['BsmtFinSF1'].fillna(0)
+df['BsmtFinSF2'] = df['BsmtFinSF2'].fillna(0)
+df['BsmtUnfSF'] = df['BsmtUnfSF'].fillna(0)
+df['BsmtFullBath'] = df['BsmtFullBath'].fillna(0)
+df['BsmtHalfBath'] = df['BsmtHalfBath'].fillna(0)
+df['TotalBsmtSF'] = df['TotalBsmtSF'].fillna(0)
+
+
+# Check for null values
+where_is_null_values(df)
+```
+
+
+
+
+    MSZoning       4
+    Utilities      2
+    Functional     2
+    Exterior1st    1
+    Exterior2nd    1
+    Electrical     1
+    KitchenQual    1
+    SaleType       1
+    dtype: int64
+
+
+
+For other values I'll replace it with most frequent value
+
+
+```python
+# Check for most frequent value (repeat for other)
+df['KitchenQual'].value_counts()
+```
+
+
+
+
+    TA    1492
+    Gd    1151
+    Ex     205
+    Fa      70
+    Name: KitchenQual, dtype: int64
+
+
+
+
+```python
+# Replace nan in object and categorical columns
+df['KitchenQual'] = df['KitchenQual'].transform(lambda x: x.fillna("TA"))
+df['Exterior1st'] = df['Exterior1st'].transform(lambda x: x.fillna("VinylSd"))
+df['Exterior2nd'] = df['Exterior2nd'].transform(lambda x: x.fillna("VinylSd"))
+df['SaleType'] = df['SaleType'].transform(lambda x: x.fillna("WD"))
+df['Functional'] = df['Functional'].transform(lambda x: x.fillna("Typ"))
+df['Electrical'] = df['Electrical'].transform(lambda x: x.fillna("SBrkr"))
+df['MSZoning'] = df['MSZoning'].transform(lambda x: x.fillna("RL"))
+df['Utilities'] = df['Utilities'].transform(lambda x: x.fillna("NA"))
+
+# Check for null values
+where_is_null_values(df)
+```
+
+
+
+
+    Series([], dtype: int64)
+
+
+
+Now we have dataframe without NaN values. Let's return train and test df's again.
+
+Now it's time to split df's
+
+
+```python
+# Split df to train and test (as it was before joining). train df had 1460 rows and test 1459 rows
+train = df.iloc[:1460,:]
+test  = df.iloc[1460:, :]
+
+# Drop SalePrice column
+test.drop('SalePrice', axis=1, inplace=True)
+test.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Id</th>
+      <th>MSSubClass</th>
+      <th>MSZoning</th>
+      <th>LotFrontage</th>
+      <th>LotArea</th>
+      <th>Street</th>
+      <th>Alley</th>
+      <th>LotShape</th>
+      <th>LandContour</th>
+      <th>Utilities</th>
+      <th>...</th>
+      <th>ScreenPorch</th>
+      <th>PoolArea</th>
+      <th>PoolQC</th>
+      <th>Fence</th>
+      <th>MiscFeature</th>
+      <th>MiscVal</th>
+      <th>MoSold</th>
+      <th>YrSold</th>
+      <th>SaleType</th>
+      <th>SaleCondition</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>65.0</td>
-      <td>7</td>
-      <td>2003</td>
-      <td>2003</td>
-      <td>196.0</td>
-      <td>706</td>
-      <td>856</td>
-      <td>856</td>
-      <td>854</td>
-      <td>1710</td>
-      <td>...</td>
-      <td>0</td>
-      <td>61</td>
-      <td>208500</td>
-      <td>RL</td>
+      <td>1461</td>
+      <td>20</td>
+      <td>RH</td>
+      <td>80.0</td>
+      <td>11622</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>Reg</td>
+      <td>Lvl</td>
       <td>AllPub</td>
-      <td>1Fam</td>
-      <td>GasA</td>
-      <td>Gd</td>
+      <td>...</td>
+      <td>120</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>MnPrv</td>
+      <td>None</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
       <td>Normal</td>
-      <td>Gtl</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>80.0</td>
-      <td>6</td>
-      <td>1976</td>
-      <td>1976</td>
-      <td>0.0</td>
-      <td>978</td>
-      <td>1262</td>
-      <td>1262</td>
-      <td>0</td>
-      <td>1262</td>
-      <td>...</td>
-      <td>298</td>
-      <td>0</td>
-      <td>181500</td>
+      <td>1462</td>
+      <td>20</td>
       <td>RL</td>
+      <td>81.0</td>
+      <td>14267</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>Lvl</td>
       <td>AllPub</td>
-      <td>1Fam</td>
-      <td>GasA</td>
-      <td>TA</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>Gar2</td>
+      <td>12500</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
       <td>Normal</td>
-      <td>Gtl</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>68.0</td>
-      <td>7</td>
-      <td>2001</td>
-      <td>2002</td>
-      <td>162.0</td>
-      <td>486</td>
-      <td>920</td>
-      <td>920</td>
-      <td>866</td>
-      <td>1786</td>
+      <td>1463</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>74.0</td>
+      <td>13830</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
       <td>...</td>
       <td>0</td>
-      <td>42</td>
-      <td>223500</td>
-      <td>RL</td>
-      <td>AllPub</td>
-      <td>1Fam</td>
-      <td>GasA</td>
-      <td>Gd</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>MnPrv</td>
+      <td>None</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2010</td>
+      <td>WD</td>
       <td>Normal</td>
-      <td>Gtl</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>60.0</td>
-      <td>7</td>
-      <td>1915</td>
-      <td>1970</td>
-      <td>0.0</td>
-      <td>216</td>
-      <td>756</td>
-      <td>961</td>
-      <td>756</td>
-      <td>1717</td>
+      <td>1464</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>78.0</td>
+      <td>9978</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
       <td>...</td>
       <td>0</td>
-      <td>35</td>
-      <td>140000</td>
-      <td>RL</td>
-      <td>AllPub</td>
-      <td>1Fam</td>
-      <td>GasA</td>
-      <td>Gd</td>
-      <td>Abnorml</td>
-      <td>Gtl</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>84.0</td>
-      <td>8</td>
-      <td>2000</td>
-      <td>2000</td>
-      <td>350.0</td>
-      <td>655</td>
-      <td>1145</td>
-      <td>1145</td>
-      <td>1053</td>
-      <td>2198</td>
-      <td>...</td>
-      <td>192</td>
-      <td>84</td>
-      <td>250000</td>
+      <td>1465</td>
+      <td>120</td>
       <td>RL</td>
+      <td>43.0</td>
+      <td>5005</td>
+      <td>Pave</td>
+      <td>No alley access</td>
+      <td>IR1</td>
+      <td>HLS</td>
       <td>AllPub</td>
-      <td>1Fam</td>
-      <td>GasA</td>
-      <td>Gd</td>
+      <td>...</td>
+      <td>144</td>
+      <td>0</td>
+      <td>No Pool</td>
+      <td>No Fence</td>
+      <td>None</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2010</td>
+      <td>WD</td>
       <td>Normal</td>
-      <td>Gtl</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 26 columns</p>
+<p>5 rows × 80 columns</p>
 </div>
 
 
 
-
-```python
-#Check for missing values
-print(train_df.isna().sum())
-
-print("Total: ",train_df.isna().sum().sum())
-```
-
-    LotFrontage      259
-    OverallQual        0
-    YearBuilt          0
-    YearRemodAdd       0
-    MasVnrArea         8
-    BsmtFinSF1         0
-    TotalBsmtSF        0
-    1stFlrSF           0
-    2ndFlrSF           0
-    GrLivArea          0
-    FullBath           0
-    TotRmsAbvGrd       0
-    Fireplaces         0
-    GarageYrBlt       81
-    GarageCars         0
-    GarageArea         0
-    WoodDeckSF         0
-    OpenPorchSF        0
-    SalePrice          0
-    MSZoning           0
-    Utilities          0
-    BldgType           0
-    Heating            0
-    KitchenQual        0
-    SaleCondition      0
-    LandSlope          0
-    dtype: int64
-    Total:  348
-
-
-We have missing values in 3 columns. Let's explore them deeply.
+# Check for throwouts
+We need to exclude throwouts from train dataframe. For this purposes get numeric columns and plot boxplots.
 
 
 ```python
-sns.scatterplot(x="SalePrice", y="GarageYrBlt", data=train_df)
+# Get all numeric columns names
+numeric_columns = train.describe().columns
 ```
 
 
-
-
-    <AxesSubplot:xlabel='SalePrice', ylabel='GarageYrBlt'>
-
-
+```python
+i=1
+plt.figure(figsize=(20,80))
+for column in numeric_columns:
+    plt.subplot(20, 4, i)
+    plt.boxplot(train[column])
+    plt.title(column)
+    i=i+1 
+plt.show() 
+```
 
 
     
-![png](output_17_1.png)
+![png](output_43_0.png)
     
 
 
+Its time to remove data
+
 
 ```python
-train["GarageYrBlt"].describe()
+# Remove rows with throwouts. Add or remove other columns to test how it works with final performance
+train = train.drop(train[train['LotFrontage'] > 250].index)
+# train = train.drop(train[train['MSSubClass'] > 150].index)
+# train = train.drop(train[train['BsmtFinSF1'] > 4500].index)
+
+train.shape
 ```
 
 
 
 
-    count    1379.000000
-    mean     1978.506164
-    std        24.689725
-    min      1900.000000
-    25%      1961.000000
-    50%      1980.000000
-    75%      2002.000000
-    max      2010.000000
-    Name: GarageYrBlt, dtype: float64
+    (1458, 81)
 
 
-
-GarageYrBlt column contains list of years when Garage was built. Let's cut it to 5 bins.
-
-
-```python
-# Convert data from Categorical to numeric type
-train_df['GarageYrBlt']=pd.to_numeric(train_df['GarageYrBlt'])
-
-# Replace Nan by '1'
-train_df['GarageYrBlt'] = train_df['GarageYrBlt'].fillna(1)
-
-# Define bins borders
-bins = [0, 1900, 1950, 1970, 1990, 2010]
-
-# Create list of bined values
-group_names = ['No_data', '1900-1949', '1950-1969', '1970-1989', '1990-2010']
-
-# Create new column to DF
-train_df['GarageYrBlt'] = pd.cut(train_df['GarageYrBlt'], bins, labels=group_names, include_lowest=True)
-
-train_df['GarageYrBlt'].value_counts()
-```
-
-
-
-
-    1990-2010    582
-    1950-1969    332
-    1970-1989    277
-    1900-1949    187
-    No_data       82
-    Name: GarageYrBlt, dtype: int64
-
-
-
-
-```python
-# Check for missing values again
-train_df.isna().sum()
-```
-
-
-
-
-    LotFrontage      259
-    OverallQual        0
-    YearBuilt          0
-    YearRemodAdd       0
-    MasVnrArea         8
-    BsmtFinSF1         0
-    TotalBsmtSF        0
-    1stFlrSF           0
-    2ndFlrSF           0
-    GrLivArea          0
-    FullBath           0
-    TotRmsAbvGrd       0
-    Fireplaces         0
-    GarageYrBlt        0
-    GarageCars         0
-    GarageArea         0
-    WoodDeckSF         0
-    OpenPorchSF        0
-    SalePrice          0
-    MSZoning           0
-    Utilities          0
-    BldgType           0
-    Heating            0
-    KitchenQual        0
-    SaleCondition      0
-    LandSlope          0
-    dtype: int64
-
-
-
-Visualize how binned data looks now.
-
-
-```python
-# Plot barplot
-sns.barplot(x=train_df['GarageYrBlt'], y=train_df['SalePrice'], data=train_df)
-```
-
-
-
-
-    <AxesSubplot:xlabel='GarageYrBlt', ylabel='SalePrice'>
-
-
-
-
-    
-![png](output_23_1.png)
-    
-
-
-LotFrontage column has numeric values. I'll replace missing values by median LotFrontage of neighborgood houses.
-
-
-```python
-# Replace missing values
-train_df["LotFrontage"] = train.groupby("Neighborhood")["LotFrontage"].transform(lambda x: x.fillna(x.median()))
-train_df["LotFrontage"].isna().sum()
-```
-
-
-
-
-    0
-
-
-
-
-```python
-train_df.isna().sum()
-```
-
-
-
-
-    LotFrontage      0
-    OverallQual      0
-    YearBuilt        0
-    YearRemodAdd     0
-    MasVnrArea       8
-    BsmtFinSF1       0
-    TotalBsmtSF      0
-    1stFlrSF         0
-    2ndFlrSF         0
-    GrLivArea        0
-    FullBath         0
-    TotRmsAbvGrd     0
-    Fireplaces       0
-    GarageYrBlt      0
-    GarageCars       0
-    GarageArea       0
-    WoodDeckSF       0
-    OpenPorchSF      0
-    SalePrice        0
-    MSZoning         0
-    Utilities        0
-    BldgType         0
-    Heating          0
-    KitchenQual      0
-    SaleCondition    0
-    LandSlope        0
-    dtype: int64
-
-
-
-Explore MasVnrArea column
-
-
-```python
-train_df["MasVnrArea"].describe()
-```
-
-
-
-
-    count    1452.000000
-    mean      103.685262
-    std       181.066207
-    min         0.000000
-    25%         0.000000
-    50%         0.000000
-    75%       166.000000
-    max      1600.000000
-    Name: MasVnrArea, dtype: float64
-
-
-
-
-```python
-train_df.dtypes
-```
-
-
-
-
-    LotFrontage       float64
-    OverallQual         int64
-    YearBuilt           int64
-    YearRemodAdd        int64
-    MasVnrArea        float64
-    BsmtFinSF1          int64
-    TotalBsmtSF         int64
-    1stFlrSF            int64
-    2ndFlrSF            int64
-    GrLivArea           int64
-    FullBath            int64
-    TotRmsAbvGrd        int64
-    Fireplaces          int64
-    GarageYrBlt      category
-    GarageCars          int64
-    GarageArea          int64
-    WoodDeckSF          int64
-    OpenPorchSF         int64
-    SalePrice           int64
-    MSZoning           object
-    Utilities          object
-    BldgType           object
-    Heating            object
-    KitchenQual        object
-    SaleCondition      object
-    LandSlope          object
-    dtype: object
-
-
-
-
-```python
-sns.scatterplot(x=train_df["MasVnrArea"], y=train_df["SalePrice"], data=train_df)
-```
-
-
-
-
-    <AxesSubplot:xlabel='MasVnrArea', ylabel='SalePrice'>
-
-
-
-
-    
-![png](output_30_1.png)
-    
-
-
-We can see lots of null values and linear depency. Let's cut the column to 8 pieces
-
-
-```python
-# Define bins
-bins = np.linspace(min(train_df["MasVnrArea"]), max(train_df["MasVnrArea"]), 9)
-
-# Set group names
-g_names = ['0-200', '200-400', '400-600', '600-800', '800-1000', '1000-1200', '1200-1400', '1400-1600']
-
-# Cut it
-train_df["MasVnrArea"] = pd.cut(train_df["MasVnrArea"], bins, labels=g_names, include_lowest=True )
-
-train_df["MasVnrArea"].value_counts()
-```
-
-
-
-
-    0-200        1154
-    200-400       198
-    400-600        61
-    600-800        25
-    800-1000        7
-    1000-1200       5
-    1200-1400       1
-    1400-1600       1
-    Name: MasVnrArea, dtype: int64
-
-
-
-
-```python
-# Plot barplot
-sns.barplot(x=train_df["MasVnrArea"], y=train_df["SalePrice"], data=train_df)
-```
-
-
-
-
-    <AxesSubplot:xlabel='MasVnrArea', ylabel='SalePrice'>
-
-
-
-
-    
-![png](output_33_1.png)
-    
-
-
-Check for vars that strongly correlates to each other
-
-
-```python
-def get_vars_list_with_strong_correlation(dataframe):
-    # Function returns list of vars that correlates to each  other with value of correlation
-    # coefficien more then 90%
-    
-    # Create an empty list
-    CorField = []
-    
-    # Count correlation coefficients
-    CorrKoef=dataframe.corr()    
-    
-    # For each column in df
-    for column_index in CorrKoef:
-        
-        # For each var index in filtered df where value more then 90%
-        for var_index in CorrKoef.index[CorrKoef[column_index] > 0.9]:
-            
-            # Check if var index already in list and check for coefficient 
-            # for same variable
-            if column_index != var_index and var_index not in CorField and column_index not in CorField:
-                CorField.append(var_index)
-                print ("%s-->%s: r^2=%f" % (column_index,var_index, CorrKoef[column_index][CorrKoef.index==var_index].values[0]))
-    return(CorField)   
-```
-
-
-```python
-# Run function and get the list of vars
-get_vars_list_with_strong_correlation(train_df)
-```
-
-
-
-
-    []
-
-
-
-As we got empty list it means that there is no such vars.
-
-
-```python
-# Plot the charts
-sns.pairplot(train_df[important_cols])
-```
-
-
-
-
-    <seaborn.axisgrid.PairGrid at 0x7fc5c7c093d0>
-
-
-
-
-    
-![png](output_38_1.png)
-    
-
-
-Transform dataframe to df with dummies
 
 
 ```python
@@ -1502,7 +2273,7 @@ def get_dataframe_with_dummy_vars(df, list_of_columns):
         for index, value in enumerate(dummy_df['index']):
             
             # Get name of the var
-            name = dummy_df.iloc[index,0]
+            name = str(dummy_df.iloc[index,0])
             
             # Create new column name
             new_column_name = column + "_" + name 
@@ -1517,26 +2288,47 @@ def get_dataframe_with_dummy_vars(df, list_of_columns):
         df.drop(column, axis = 1, inplace=True)
         
     return(df)
-    
 ```
+
+
+```python
+# Append train df with test df
+df = train.append(test)
+
+# Check for df's shape
+df.shape
+```
+
+
+
+
+    (2917, 81)
+
+
 
 
 ```python
 # Get list of columns that are 'object' or 'category' data type
-list_of_cols =  list(train_df.select_dtypes(['object', 'category']).columns)
+list_of_cols =  list(df.select_dtypes(['object', 'category']).columns)
 print(list_of_cols)
 
 #Get df with dummies
-train_df_d = get_dataframe_with_dummy_vars(train_df, list_of_cols)
+df_d = get_dataframe_with_dummy_vars(df, list_of_cols)
+df_d.shape
+
+train_df_lenth = len(train)
+
+# Split df to train and test (as it was before joining). train df had 1460 rows and test 1459 rows
+train = df_d.iloc[:train_df_lenth,:]
+test  = df_d.iloc[train_df_lenth:, :]
+
+# Drop SalePrice column
+test.drop('SalePrice', axis=1, inplace=True)
+test.head()
 ```
 
-    ['MasVnrArea', 'GarageYrBlt', 'MSZoning', 'Utilities', 'BldgType', 'Heating', 'KitchenQual', 'SaleCondition', 'LandSlope']
-
-
-
-```python
-train_df_d.head().T
-```
+    ['MSZoning', 'Street', 'Alley', 'LotShape', 'LandContour', 'Utilities', 'LotConfig', 'LandSlope', 'Neighborhood', 'Condition1', 'Condition2', 'BldgType', 'HouseStyle', 'RoofStyle', 'RoofMatl', 'Exterior1st', 'Exterior2nd', 'MasVnrType', 'ExterQual', 'ExterCond', 'Foundation', 'BsmtQual', 'BsmtCond', 'BsmtExposure', 'BsmtFinType1', 'BsmtFinType2', 'Heating', 'HeatingQC', 'CentralAir', 'Electrical', 'KitchenQual', 'Functional', 'FireplaceQu', 'GarageType', 'GarageYrBlt', 'GarageFinish', 'GarageQual', 'GarageCond', 'PavedDrive', 'PoolQC', 'Fence', 'MiscFeature', 'SaleType', 'SaleCondition']
+    
 
 
 
@@ -1559,332 +2351,159 @@ train_df_d.head().T
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>0</th>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
+      <th>Id</th>
+      <th>MSSubClass</th>
       <th>LotFrontage</th>
-      <td>65.0</td>
-      <td>80.0</td>
-      <td>68.0</td>
-      <td>60.0</td>
-      <td>84.0</td>
-    </tr>
-    <tr>
+      <th>LotArea</th>
       <th>OverallQual</th>
-      <td>7.0</td>
-      <td>6.0</td>
-      <td>7.0</td>
-      <td>7.0</td>
-      <td>8.0</td>
-    </tr>
-    <tr>
-      <th>YearBuilt</th>
-      <td>2003.0</td>
-      <td>1976.0</td>
-      <td>2001.0</td>
-      <td>1915.0</td>
-      <td>2000.0</td>
-    </tr>
-    <tr>
-      <th>YearRemodAdd</th>
-      <td>2003.0</td>
-      <td>1976.0</td>
-      <td>2002.0</td>
-      <td>1970.0</td>
-      <td>2000.0</td>
-    </tr>
-    <tr>
-      <th>BsmtFinSF1</th>
-      <td>706.0</td>
-      <td>978.0</td>
-      <td>486.0</td>
-      <td>216.0</td>
-      <td>655.0</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>SaleCondition_Normal</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>SaleCondition_Partial</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>LandSlope_Gtl</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-    </tr>
-    <tr>
-      <th>LandSlope_Mod</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>LandSlope_Sev</th>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-  </tbody>
-</table>
-<p>61 rows × 5 columns</p>
-</div>
-
-
-
-<a id="ds"></a>
-# Data Standartisation
-
-Split the data into X and y chunks
-
-
-```python
-# Set X
-X = train_df_d.drop("SalePrice", axis=1)
-
-# Set y
-y = train_df_d["SalePrice"]
-```
-
-Standardize only numeric values. First we need to remove 3 columns from our list
-
-
-```python
-important_num_cols.remove("SalePrice")
-important_num_cols.remove("MasVnrArea")
-important_num_cols.remove("GarageYrBlt")
-```
-
-
-```python
-# Import lib
-from sklearn.preprocessing import StandardScaler
-
-# Normalize data
-scaler = StandardScaler()
-X[important_num_cols] = scaler.fit_transform(X[important_num_cols])
-```
-
-
-```python
-X.head()
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>LotFrontage</th>
-      <th>OverallQual</th>
+      <th>OverallCond</th>
       <th>YearBuilt</th>
       <th>YearRemodAdd</th>
+      <th>MasVnrArea</th>
       <th>BsmtFinSF1</th>
-      <th>TotalBsmtSF</th>
-      <th>1stFlrSF</th>
-      <th>2ndFlrSF</th>
-      <th>GrLivArea</th>
-      <th>FullBath</th>
       <th>...</th>
-      <th>KitchenQual_TA</th>
+      <th>SaleType_ConLw</th>
+      <th>SaleType_New</th>
+      <th>SaleType_Oth</th>
+      <th>SaleType_WD</th>
       <th>SaleCondition_Abnorml</th>
       <th>SaleCondition_AdjLand</th>
       <th>SaleCondition_Alloca</th>
       <th>SaleCondition_Family</th>
       <th>SaleCondition_Normal</th>
       <th>SaleCondition_Partial</th>
-      <th>LandSlope_Gtl</th>
-      <th>LandSlope_Mod</th>
-      <th>LandSlope_Sev</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>-0.231877</td>
-      <td>0.651479</td>
-      <td>1.050994</td>
-      <td>0.878668</td>
-      <td>0.575425</td>
-      <td>-0.459303</td>
-      <td>-0.793434</td>
-      <td>1.161852</td>
-      <td>0.370333</td>
-      <td>0.789741</td>
+      <td>1461</td>
+      <td>20</td>
+      <td>80.0</td>
+      <td>11622</td>
+      <td>5</td>
+      <td>6</td>
+      <td>1961</td>
+      <td>1961</td>
+      <td>0.0</td>
+      <td>468.0</td>
       <td>...</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.437043</td>
-      <td>-0.071836</td>
-      <td>0.156734</td>
-      <td>-0.429577</td>
-      <td>1.171992</td>
-      <td>0.466465</td>
-      <td>0.257140</td>
-      <td>-0.795163</td>
-      <td>-0.482512</td>
-      <td>0.789741</td>
+      <td>1462</td>
+      <td>20</td>
+      <td>81.0</td>
+      <td>14267</td>
+      <td>6</td>
+      <td>6</td>
+      <td>1958</td>
+      <td>1958</td>
+      <td>108.0</td>
+      <td>923.0</td>
       <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>-0.098093</td>
-      <td>0.651479</td>
-      <td>0.984752</td>
-      <td>0.830215</td>
-      <td>0.092907</td>
-      <td>-0.313369</td>
-      <td>-0.627826</td>
-      <td>1.189351</td>
-      <td>0.515013</td>
-      <td>0.789741</td>
+      <td>1463</td>
+      <td>60</td>
+      <td>74.0</td>
+      <td>13830</td>
+      <td>5</td>
+      <td>5</td>
+      <td>1997</td>
+      <td>1998</td>
+      <td>0.0</td>
+      <td>791.0</td>
       <td>...</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>-0.454850</td>
-      <td>0.651479</td>
-      <td>-1.863632</td>
-      <td>-0.720298</td>
-      <td>-0.499274</td>
-      <td>-0.687324</td>
-      <td>-0.521734</td>
-      <td>0.937276</td>
-      <td>0.383659</td>
-      <td>-1.026041</td>
+      <td>1464</td>
+      <td>60</td>
+      <td>78.0</td>
+      <td>9978</td>
+      <td>6</td>
+      <td>6</td>
+      <td>1998</td>
+      <td>1998</td>
+      <td>20.0</td>
+      <td>602.0</td>
       <td>...</td>
       <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.615421</td>
-      <td>1.374795</td>
-      <td>0.951632</td>
-      <td>0.733308</td>
-      <td>0.463568</td>
-      <td>0.199680</td>
-      <td>-0.045611</td>
-      <td>1.617877</td>
-      <td>1.299326</td>
-      <td>0.789741</td>
+      <td>1465</td>
+      <td>120</td>
+      <td>43.0</td>
+      <td>5005</td>
+      <td>8</td>
+      <td>5</td>
+      <td>1992</td>
+      <td>1992</td>
+      <td>0.0</td>
+      <td>263.0</td>
       <td>...</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
       <td>0</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 60 columns</p>
+<p>5 rows × 402 columns</p>
 </div>
 
 
 
-Train test split
-
-
-```python
-# Import lib
-from sklearn.model_selection import train_test_split, cross_val_score
-
-# Split the data into train and test chunks
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-```
-
 <a id="MLM"></a>
-# Machine learing models
+# Machine Learning
 
 Define functions first
 
@@ -1945,7 +2564,76 @@ def run_ml_and_get_performance_results(models_list):
         models = models.append(new_row, ignore_index=True)
     
     return models
-    
+```
+
+
+```python
+# Set X and y 
+y = train[['SalePrice']]
+train.drop('SalePrice', axis=1, inplace=True)
+X = train
+```
+
+
+```python
+X.dtypes.T
+```
+
+
+
+
+    Id                         int64
+    MSSubClass                 int64
+    LotFrontage              float64
+    LotArea                    int64
+    OverallQual                int64
+                              ...   
+    SaleCondition_AdjLand      uint8
+    SaleCondition_Alloca       uint8
+    SaleCondition_Family       uint8
+    SaleCondition_Normal       uint8
+    SaleCondition_Partial      uint8
+    Length: 402, dtype: object
+
+
+
+
+```python
+# Import lib
+from sklearn.preprocessing import StandardScaler
+
+# Normalize data
+scaler = StandardScaler()
+X = scaler.fit_transform(X)
+X
+```
+
+
+
+
+    array([[-1.72964085,  0.07279605, -0.2355964 , ..., -0.11793306,
+             0.46695301, -0.3048828 ],
+           [-1.72726813, -0.872742  ,  0.49406349, ..., -0.11793306,
+             0.46695301, -0.3048828 ],
+           [-1.72489541,  0.07279605, -0.08966442, ..., -0.11793306,
+             0.46695301, -0.3048828 ],
+           ...,
+           [ 1.72741134,  0.30918057, -0.18695241, ..., -0.11793306,
+             0.46695301, -0.3048828 ],
+           [ 1.72978406, -0.872742  , -0.08966442, ..., -0.11793306,
+             0.46695301, -0.3048828 ],
+           [ 1.73215678, -0.872742  ,  0.25084352, ..., -0.11793306,
+             0.46695301, -0.3048828 ]])
+
+
+
+
+```python
+# Import lib
+from sklearn.model_selection import train_test_split, cross_val_score
+
+# Split the data into train and test chunks
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 ```
 
 
@@ -1973,190 +2661,15 @@ models_list = [Ridge(),
                PolynomialFeatures(degree=2)
                ]
 
-results = run_ml_and_get_performance_results(models_list)
-```
 
-    ------------------------------
-    Model  Ridge()  Started
-    MAE: 22606.059934893816
-    MSE: 1309278571.2651732
-    RMSE: 36183.95461064439
-    R2 Score: 0.8293060117784333
-    ------------------------------
-    RMSE Cross-Validation: 35614.419237946626
-    ------------------------------
-    Model  Lasso()  Started
-    MAE: 22862.581490394266
-    MSE: 1327001887.00181
-    RMSE: 36428.03710058792
-    R2 Score: 0.8269953778812686
-    ------------------------------
-    RMSE Cross-Validation: 36038.320454781955
-    ------------------------------
-    Model  ElasticNet()  Started
-    MAE: 22297.27253344446
-    MSE: 1536211772.7639716
-    RMSE: 39194.5375373147
-    R2 Score: 0.7997201512336548
-    ------------------------------
-    RMSE Cross-Validation: 36832.93595373031
-    ------------------------------
-    Model  SVR(C=100000)  Started
-    MAE: 17237.29201307822
-    MSE: 1059642041.1924161
-    RMSE: 32552.143419326723
-    R2 Score: 0.8618517632014754
-    ------------------------------
-    RMSE Cross-Validation: 29821.97843720208
-    ------------------------------
-    Model  RandomForestRegressor()  Started
-    MAE: 17881.772534246575
-    MSE: 782016415.0401495
-    RMSE: 27964.55640699758
-    R2 Score: 0.898046524500171
-    ------------------------------
-    RMSE Cross-Validation: 29926.118504806538
-    ------------------------------
-    Model  XGBRegressor(base_score=None, booster=None, callbacks=None,
-                 colsample_bylevel=None, colsample_bynode=None,
-                 colsample_bytree=None, early_stopping_rounds=None,
-                 enable_categorical=False, eval_metric=None, gamma=None,
-                 gpu_id=None, grow_policy=None, importance_type=None,
-                 interaction_constraints=None, learning_rate=0.01, max_bin=None,
-                 max_cat_to_onehot=None, max_delta_step=None, max_depth=None,
-                 max_leaves=None, min_child_weight=None, missing=nan,
-                 monotone_constraints=None, n_estimators=1000, n_jobs=None,
-                 num_parallel_tree=None, predictor=None, random_state=None,
-                 reg_alpha=None, reg_lambda=None, ...)  Started
-    MAE: 17404.034567636987
-    MSE: 853374024.3337017
-    RMSE: 29212.56620589334
-    R2 Score: 0.8887434508933809
-    ------------------------------
-    RMSE Cross-Validation: 28325.729892151274
-    ------------------------------
-    Model  PolynomialFeatures()  Started
-    MAE: 646250074210992.0
-    MSE: 1.2300893781672986e+31
-    RMSE: 3507263004348688.0
-    R2 Score: -1.6036989105035716e+21
-    ------------------------------
-    RMSE Cross-Validation: 20673685755101.43
-
-
-
-```python
-results.sort_values(by="RMSE (Cross-Validation)")
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Model</th>
-      <th>MAE</th>
-      <th>MSE</th>
-      <th>RMSE</th>
-      <th>R2 Score</th>
-      <th>RMSE (Cross-Validation)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>5</th>
-      <td>XGBRegress</td>
-      <td>1.740403e+04</td>
-      <td>8.533740e+08</td>
-      <td>2.921257e+04</td>
-      <td>8.887435e-01</td>
-      <td>2.832573e+04</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>SVR(C=1000</td>
-      <td>1.723729e+04</td>
-      <td>1.059642e+09</td>
-      <td>3.255214e+04</td>
-      <td>8.618518e-01</td>
-      <td>2.982198e+04</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>RandomFore</td>
-      <td>1.788177e+04</td>
-      <td>7.820164e+08</td>
-      <td>2.796456e+04</td>
-      <td>8.980465e-01</td>
-      <td>2.992612e+04</td>
-    </tr>
-    <tr>
-      <th>0</th>
-      <td>Ridge()</td>
-      <td>2.260606e+04</td>
-      <td>1.309279e+09</td>
-      <td>3.618395e+04</td>
-      <td>8.293060e-01</td>
-      <td>3.561442e+04</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Lasso()</td>
-      <td>2.286258e+04</td>
-      <td>1.327002e+09</td>
-      <td>3.642804e+04</td>
-      <td>8.269954e-01</td>
-      <td>3.603832e+04</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>ElasticNet</td>
-      <td>2.229727e+04</td>
-      <td>1.536212e+09</td>
-      <td>3.919454e+04</td>
-      <td>7.997202e-01</td>
-      <td>3.683294e+04</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>Polynomial</td>
-      <td>6.462501e+14</td>
-      <td>1.230089e+31</td>
-      <td>3.507263e+15</td>
-      <td>-1.603699e+21</td>
-      <td>2.067369e+13</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-XGBRegress shows better result with this settings. You can tune up setting for each model in list upper or add your models when run function. Do not forget import required libs.
-
-
 ```python
-# Plot chart if U need
-#plt.figure(figsize=(12,8))
-#sns.barplot(x=results["Model"], y=results["RMSE (Cross-Validation)"])
-#plt.title("Models comparison")
-#plt.show
+# Uncomment this two lines to see resul of function's work
+
+# results = run_ml_and_get_performance_results(models_list)
+# results.sort_values(by="RMSE (Cross-Validation)")
 ```
 
 # Price prediction
@@ -2164,998 +2677,12 @@ When we choosed the model, let's predict prices. Start from dataframe preparatio
 
 
 ```python
-test = pd.read_csv("../input/house-prices-advanced-regression-techniques/test.csv")
-test.info()
-```
-
-    <class 'pandas.core.frame.DataFrame'>
-    RangeIndex: 1459 entries, 0 to 1458
-    Data columns (total 80 columns):
-     #   Column         Non-Null Count  Dtype  
-    ---  ------         --------------  -----  
-     0   Id             1459 non-null   int64  
-     1   MSSubClass     1459 non-null   int64  
-     2   MSZoning       1455 non-null   object 
-     3   LotFrontage    1232 non-null   float64
-     4   LotArea        1459 non-null   int64  
-     5   Street         1459 non-null   object 
-     6   Alley          107 non-null    object 
-     7   LotShape       1459 non-null   object 
-     8   LandContour    1459 non-null   object 
-     9   Utilities      1457 non-null   object 
-     10  LotConfig      1459 non-null   object 
-     11  LandSlope      1459 non-null   object 
-     12  Neighborhood   1459 non-null   object 
-     13  Condition1     1459 non-null   object 
-     14  Condition2     1459 non-null   object 
-     15  BldgType       1459 non-null   object 
-     16  HouseStyle     1459 non-null   object 
-     17  OverallQual    1459 non-null   int64  
-     18  OverallCond    1459 non-null   int64  
-     19  YearBuilt      1459 non-null   int64  
-     20  YearRemodAdd   1459 non-null   int64  
-     21  RoofStyle      1459 non-null   object 
-     22  RoofMatl       1459 non-null   object 
-     23  Exterior1st    1458 non-null   object 
-     24  Exterior2nd    1458 non-null   object 
-     25  MasVnrType     1443 non-null   object 
-     26  MasVnrArea     1444 non-null   float64
-     27  ExterQual      1459 non-null   object 
-     28  ExterCond      1459 non-null   object 
-     29  Foundation     1459 non-null   object 
-     30  BsmtQual       1415 non-null   object 
-     31  BsmtCond       1414 non-null   object 
-     32  BsmtExposure   1415 non-null   object 
-     33  BsmtFinType1   1417 non-null   object 
-     34  BsmtFinSF1     1458 non-null   float64
-     35  BsmtFinType2   1417 non-null   object 
-     36  BsmtFinSF2     1458 non-null   float64
-     37  BsmtUnfSF      1458 non-null   float64
-     38  TotalBsmtSF    1458 non-null   float64
-     39  Heating        1459 non-null   object 
-     40  HeatingQC      1459 non-null   object 
-     41  CentralAir     1459 non-null   object 
-     42  Electrical     1459 non-null   object 
-     43  1stFlrSF       1459 non-null   int64  
-     44  2ndFlrSF       1459 non-null   int64  
-     45  LowQualFinSF   1459 non-null   int64  
-     46  GrLivArea      1459 non-null   int64  
-     47  BsmtFullBath   1457 non-null   float64
-     48  BsmtHalfBath   1457 non-null   float64
-     49  FullBath       1459 non-null   int64  
-     50  HalfBath       1459 non-null   int64  
-     51  BedroomAbvGr   1459 non-null   int64  
-     52  KitchenAbvGr   1459 non-null   int64  
-     53  KitchenQual    1458 non-null   object 
-     54  TotRmsAbvGrd   1459 non-null   int64  
-     55  Functional     1457 non-null   object 
-     56  Fireplaces     1459 non-null   int64  
-     57  FireplaceQu    729 non-null    object 
-     58  GarageType     1383 non-null   object 
-     59  GarageYrBlt    1381 non-null   float64
-     60  GarageFinish   1381 non-null   object 
-     61  GarageCars     1458 non-null   float64
-     62  GarageArea     1458 non-null   float64
-     63  GarageQual     1381 non-null   object 
-     64  GarageCond     1381 non-null   object 
-     65  PavedDrive     1459 non-null   object 
-     66  WoodDeckSF     1459 non-null   int64  
-     67  OpenPorchSF    1459 non-null   int64  
-     68  EnclosedPorch  1459 non-null   int64  
-     69  3SsnPorch      1459 non-null   int64  
-     70  ScreenPorch    1459 non-null   int64  
-     71  PoolArea       1459 non-null   int64  
-     72  PoolQC         3 non-null      object 
-     73  Fence          290 non-null    object 
-     74  MiscFeature    51 non-null     object 
-     75  MiscVal        1459 non-null   int64  
-     76  MoSold         1459 non-null   int64  
-     77  YrSold         1459 non-null   int64  
-     78  SaleType       1458 non-null   object 
-     79  SaleCondition  1459 non-null   object 
-    dtypes: float64(11), int64(26), object(43)
-    memory usage: 912.0+ KB
-
-
-
-```python
-# Create test dataframe with needed columns
-important_cols = important_num_cols + cat_cols + ["GarageYrBlt", "MasVnrArea"]
-test_df = test[important_cols]
-test_df.head()
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>LotFrontage</th>
-      <th>OverallQual</th>
-      <th>YearBuilt</th>
-      <th>YearRemodAdd</th>
-      <th>BsmtFinSF1</th>
-      <th>TotalBsmtSF</th>
-      <th>1stFlrSF</th>
-      <th>2ndFlrSF</th>
-      <th>GrLivArea</th>
-      <th>FullBath</th>
-      <th>...</th>
-      <th>OpenPorchSF</th>
-      <th>MSZoning</th>
-      <th>Utilities</th>
-      <th>BldgType</th>
-      <th>Heating</th>
-      <th>KitchenQual</th>
-      <th>SaleCondition</th>
-      <th>LandSlope</th>
-      <th>GarageYrBlt</th>
-      <th>MasVnrArea</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>80.0</td>
-      <td>5</td>
-      <td>1961</td>
-      <td>1961</td>
-      <td>468.0</td>
-      <td>882.0</td>
-      <td>896</td>
-      <td>0</td>
-      <td>896</td>
-      <td>1</td>
-      <td>...</td>
-      <td>0</td>
-      <td>RH</td>
-      <td>AllPub</td>
-      <td>1Fam</td>
-      <td>GasA</td>
-      <td>TA</td>
-      <td>Normal</td>
-      <td>Gtl</td>
-      <td>1961.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>81.0</td>
-      <td>6</td>
-      <td>1958</td>
-      <td>1958</td>
-      <td>923.0</td>
-      <td>1329.0</td>
-      <td>1329</td>
-      <td>0</td>
-      <td>1329</td>
-      <td>1</td>
-      <td>...</td>
-      <td>36</td>
-      <td>RL</td>
-      <td>AllPub</td>
-      <td>1Fam</td>
-      <td>GasA</td>
-      <td>Gd</td>
-      <td>Normal</td>
-      <td>Gtl</td>
-      <td>1958.0</td>
-      <td>108.0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>74.0</td>
-      <td>5</td>
-      <td>1997</td>
-      <td>1998</td>
-      <td>791.0</td>
-      <td>928.0</td>
-      <td>928</td>
-      <td>701</td>
-      <td>1629</td>
-      <td>2</td>
-      <td>...</td>
-      <td>34</td>
-      <td>RL</td>
-      <td>AllPub</td>
-      <td>1Fam</td>
-      <td>GasA</td>
-      <td>TA</td>
-      <td>Normal</td>
-      <td>Gtl</td>
-      <td>1997.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>78.0</td>
-      <td>6</td>
-      <td>1998</td>
-      <td>1998</td>
-      <td>602.0</td>
-      <td>926.0</td>
-      <td>926</td>
-      <td>678</td>
-      <td>1604</td>
-      <td>2</td>
-      <td>...</td>
-      <td>36</td>
-      <td>RL</td>
-      <td>AllPub</td>
-      <td>1Fam</td>
-      <td>GasA</td>
-      <td>Gd</td>
-      <td>Normal</td>
-      <td>Gtl</td>
-      <td>1998.0</td>
-      <td>20.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>43.0</td>
-      <td>8</td>
-      <td>1992</td>
-      <td>1992</td>
-      <td>263.0</td>
-      <td>1280.0</td>
-      <td>1280</td>
-      <td>0</td>
-      <td>1280</td>
-      <td>2</td>
-      <td>...</td>
-      <td>82</td>
-      <td>RL</td>
-      <td>AllPub</td>
-      <td>TwnhsE</td>
-      <td>GasA</td>
-      <td>Gd</td>
-      <td>Normal</td>
-      <td>Gtl</td>
-      <td>1992.0</td>
-      <td>0.0</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 25 columns</p>
-</div>
-
-
-
-
-```python
-# Convert data from Categorical to numeric type
-test_df['GarageYrBlt']=pd.to_numeric(test_df['GarageYrBlt'])
-
-# Replace Nan by '1'
-test_df['GarageYrBlt'] = test_df['GarageYrBlt'].fillna(1)
-
-# Define bins borders
-bins = [0, 1900, 1950, 1970, 1990, 2010]
-
-# Create list of bined values
-group_names = ['No_data', '1900-1949', '1950-1969', '1970-1989', '1990-2010']
-
-# Create new column to DF
-test_df['GarageYrBlt'] = pd.cut(test_df['GarageYrBlt'], bins, labels=group_names, include_lowest=True)
-
-test_df['GarageYrBlt'].value_counts()
-```
-
-
-
-
-    1990-2010    588
-    1950-1969    331
-    1970-1989    257
-    1900-1949    197
-    No_data       85
-    Name: GarageYrBlt, dtype: int64
-
-
-
-
-```python
-test_df['GarageYrBlt'].isna().sum()
-```
-
-
-
-
-    1
-
-
-
-
-```python
-test_df["MasVnrArea"].describe()
-```
-
-
-
-
-    count    1444.000000
-    mean      100.709141
-    std       177.625900
-    min         0.000000
-    25%         0.000000
-    50%         0.000000
-    75%       164.000000
-    max      1290.000000
-    Name: MasVnrArea, dtype: float64
-
-
-
-
-```python
-# Define bins
-bins = np.linspace(0, 1600, 9)
-
-# Set group names
-g_names = ['0-200', '200-400', '400-600', '600-800', '800-1000', '1000-1200', '1200-1400', '1400-1600']
-
-test_df["MasVnrArea"] = pd.cut(test_df["MasVnrArea"], bins, labels=g_names, include_lowest=True )
-
-test_df["MasVnrArea"].value_counts()
-```
-
-
-
-
-    0-200        1161
-    200-400       176
-    400-600        73
-    600-800        22
-    800-1000        5
-    1000-1200       4
-    1200-1400       3
-    1400-1600       0
-    Name: MasVnrArea, dtype: int64
-
-
-
-
-```python
-test_df.shape
-```
-
-
-
-
-    (1459, 25)
-
-
-
-
-```python
-test_df.isna().sum()
-```
-
-
-
-
-    LotFrontage      227
-    OverallQual        0
-    YearBuilt          0
-    YearRemodAdd       0
-    BsmtFinSF1         1
-    TotalBsmtSF        1
-    1stFlrSF           0
-    2ndFlrSF           0
-    GrLivArea          0
-    FullBath           0
-    TotRmsAbvGrd       0
-    Fireplaces         0
-    GarageCars         1
-    GarageArea         1
-    WoodDeckSF         0
-    OpenPorchSF        0
-    MSZoning           4
-    Utilities          2
-    BldgType           0
-    Heating            0
-    KitchenQual        1
-    SaleCondition      0
-    LandSlope          0
-    GarageYrBlt        1
-    MasVnrArea        15
-    dtype: int64
-
-
-
-Replace missing values
-
-
-```python
-# Replace numeric column's Nan values by mean
-test_df['TotalBsmtSF'] = test_df['TotalBsmtSF'].transform(lambda x: x.fillna(x.median()))
-test_df['GarageCars'] = test_df['GarageCars'].transform(lambda x: x.fillna(x.median()))
-test_df['GarageArea'] = test_df['GarageArea'].transform(lambda x: x.fillna(x.median()))
-test_df['BsmtFinSF1'] = test_df['BsmtFinSF1'].transform(lambda x: x.fillna(x.median()))
-test_df["LotFrontage"] = test.groupby("Neighborhood")["LotFrontage"].transform(lambda x: x.fillna(x.median()))
-
-# Replace nan in object and categorical columns
-test_df["MasVnrArea"] = test_df["MasVnrArea"].transform(lambda x: x.fillna("0-200"))
-test_df['KitchenQual'] = test_df['KitchenQual'].transform(lambda x: x.fillna("TA"))
-test_df['MSZoning'] = test_df['MSZoning'].transform(lambda x: x.fillna("RL"))
-test_df['Utilities'] = test_df['Utilities'].transform(lambda x: x.fillna("NA"))
-test_df['GarageYrBlt'] = test_df['GarageYrBlt'].transform(lambda x: x.fillna("No_data"))
-```
-
-
-```python
-# Check for most frequent value in column (helps create list upper for each column)
-test_df["GarageYrBlt"].value_counts()
-```
-
-
-
-
-    1990-2010    588
-    1950-1969    331
-    1970-1989    257
-    1900-1949    197
-    No_data       86
-    Name: GarageYrBlt, dtype: int64
-
-
-
-
-```python
-#Check for missing values
-print(test_df.isna().sum())
-
-print("Total: ",test_df.isna().sum().sum())
-```
-
-    LotFrontage      0
-    OverallQual      0
-    YearBuilt        0
-    YearRemodAdd     0
-    BsmtFinSF1       0
-    TotalBsmtSF      0
-    1stFlrSF         0
-    2ndFlrSF         0
-    GrLivArea        0
-    FullBath         0
-    TotRmsAbvGrd     0
-    Fireplaces       0
-    GarageCars       0
-    GarageArea       0
-    WoodDeckSF       0
-    OpenPorchSF      0
-    MSZoning         0
-    Utilities        0
-    BldgType         0
-    Heating          0
-    KitchenQual      0
-    SaleCondition    0
-    LandSlope        0
-    GarageYrBlt      0
-    MasVnrArea       0
-    dtype: int64
-    Total:  0
-
-
-Create new df with dummies
-
-
-```python
-# Get list of columns that are 'object' data type
-list_of_cols =  list(test_df.select_dtypes(['object']).columns)
-print(list_of_cols)
-
-#Get df with dummies
-test_df_d = get_dataframe_with_dummy_vars(test_df, list_of_cols)
-```
-
-    ['MSZoning', 'Utilities', 'BldgType', 'Heating', 'KitchenQual', 'SaleCondition', 'LandSlope']
-
-
-
-```python
-test_df_d.head().T
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>0</th>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>LotFrontage</th>
-      <td>80.0</td>
-      <td>81.0</td>
-      <td>74.0</td>
-      <td>78.0</td>
-      <td>43.0</td>
-    </tr>
-    <tr>
-      <th>OverallQual</th>
-      <td>5</td>
-      <td>6</td>
-      <td>5</td>
-      <td>6</td>
-      <td>8</td>
-    </tr>
-    <tr>
-      <th>YearBuilt</th>
-      <td>1961</td>
-      <td>1958</td>
-      <td>1997</td>
-      <td>1998</td>
-      <td>1992</td>
-    </tr>
-    <tr>
-      <th>YearRemodAdd</th>
-      <td>1961</td>
-      <td>1958</td>
-      <td>1998</td>
-      <td>1998</td>
-      <td>1992</td>
-    </tr>
-    <tr>
-      <th>BsmtFinSF1</th>
-      <td>468.0</td>
-      <td>923.0</td>
-      <td>791.0</td>
-      <td>602.0</td>
-      <td>263.0</td>
-    </tr>
-    <tr>
-      <th>TotalBsmtSF</th>
-      <td>882.0</td>
-      <td>1329.0</td>
-      <td>928.0</td>
-      <td>926.0</td>
-      <td>1280.0</td>
-    </tr>
-    <tr>
-      <th>1stFlrSF</th>
-      <td>896</td>
-      <td>1329</td>
-      <td>928</td>
-      <td>926</td>
-      <td>1280</td>
-    </tr>
-    <tr>
-      <th>2ndFlrSF</th>
-      <td>0</td>
-      <td>0</td>
-      <td>701</td>
-      <td>678</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>GrLivArea</th>
-      <td>896</td>
-      <td>1329</td>
-      <td>1629</td>
-      <td>1604</td>
-      <td>1280</td>
-    </tr>
-    <tr>
-      <th>FullBath</th>
-      <td>1</td>
-      <td>1</td>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>TotRmsAbvGrd</th>
-      <td>5</td>
-      <td>6</td>
-      <td>6</td>
-      <td>7</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>Fireplaces</th>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>GarageCars</th>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>2.0</td>
-      <td>2.0</td>
-      <td>2.0</td>
-    </tr>
-    <tr>
-      <th>GarageArea</th>
-      <td>730.0</td>
-      <td>312.0</td>
-      <td>482.0</td>
-      <td>470.0</td>
-      <td>506.0</td>
-    </tr>
-    <tr>
-      <th>WoodDeckSF</th>
-      <td>140</td>
-      <td>393</td>
-      <td>212</td>
-      <td>360</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>OpenPorchSF</th>
-      <td>0</td>
-      <td>36</td>
-      <td>34</td>
-      <td>36</td>
-      <td>82</td>
-    </tr>
-    <tr>
-      <th>GarageYrBlt</th>
-      <td>1950-1969</td>
-      <td>1950-1969</td>
-      <td>1990-2010</td>
-      <td>1990-2010</td>
-      <td>1990-2010</td>
-    </tr>
-    <tr>
-      <th>MasVnrArea</th>
-      <td>0-200</td>
-      <td>0-200</td>
-      <td>0-200</td>
-      <td>0-200</td>
-      <td>0-200</td>
-    </tr>
-    <tr>
-      <th>MSZoning_C (all)</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>MSZoning_FV</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>MSZoning_RH</th>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>MSZoning_RL</th>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>MSZoning_RM</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Utilities_AllPub</th>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>Utilities_NA</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>BldgType_1Fam</th>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>BldgType_2fmCon</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>BldgType_Duplex</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>BldgType_Twnhs</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>BldgType_TwnhsE</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>Heating_GasA</th>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>Heating_GasW</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Heating_Grav</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Heating_Wall</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>KitchenQual_Ex</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>KitchenQual_Fa</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>KitchenQual_Gd</th>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>KitchenQual_TA</th>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>SaleCondition_Abnorml</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>SaleCondition_AdjLand</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>SaleCondition_Alloca</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>SaleCondition_Family</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>SaleCondition_Normal</th>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>SaleCondition_Partial</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>LandSlope_Gtl</th>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>LandSlope_Mod</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>LandSlope_Sev</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-```python
-#train_df_d.shape
-test_df_d.shape
-```
-
-
-
-
-    (1459, 47)
-
-
-
-It looks like in test df we have less colums. Check for mismatches.
-
-
-```python
-#Check for missing columns
-train_cols = train_df_d.columns
-test_cols = test_df_d.columns
-
-common_cols = train_cols.intersection(test_cols)
-train_not_test = train_cols.difference(test_cols)
-test_not_train = test_cols.difference(train_cols)
-
-print("Train not test", train_not_test)
-print("Test not train", test_not_train)
-```
-
-    Train not test Index(['GarageYrBlt_1900-1949', 'GarageYrBlt_1950-1969',
-           'GarageYrBlt_1970-1989', 'GarageYrBlt_1990-2010', 'GarageYrBlt_No_data',
-           'Heating_Floor', 'Heating_OthW', 'MasVnrArea_0-200',
-           'MasVnrArea_1000-1200', 'MasVnrArea_1200-1400', 'MasVnrArea_1400-1600',
-           'MasVnrArea_200-400', 'MasVnrArea_400-600', 'MasVnrArea_600-800',
-           'MasVnrArea_800-1000', 'SalePrice', 'Utilities_NoSeWa'],
-          dtype='object')
-    Test not train Index(['GarageYrBlt', 'MasVnrArea', 'Utilities_NA'], dtype='object')
-
-
-
-```python
-# Add missing columns with 0 value
-test_df_d[['GarageYrBlt_1900-1949', 'GarageYrBlt_1950-1969',
-       'GarageYrBlt_1970-1989', 'GarageYrBlt_1990-2010', 'GarageYrBlt_No_data',
-       'Heating_Floor', 'Heating_OthW', 'MasVnrArea_0-200',
-       'MasVnrArea_1000-1200', 'MasVnrArea_1200-1400', 'MasVnrArea_1400-1600',
-       'MasVnrArea_200-400', 'MasVnrArea_400-600', 'MasVnrArea_600-800',
-       'MasVnrArea_800-1000', 'Utilities_NoSeWa']] = 0
-```
-
-
-```python
-test_df_d.drop(['GarageYrBlt', 'MasVnrArea', 'Utilities_NA'], axis=1, inplace=True)
-```
-
-
-```python
-test_df_d.shape
-```
-
-
-
-
-    (1459, 60)
-
-
-
-Awesome we are ready to go
-
-
-```python
-# Normalize test dataframe
-test_df_d[important_num_cols] = scaler.fit_transform(test_df_d[important_num_cols])
+# Set X_test
+X_train = X
+X_test = test
+
+X_test = scaler.fit_transform(X_test)
+X_train = scaler.fit_transform(X_train)
 ```
 
 
@@ -3164,7 +2691,7 @@ test_df_d[important_num_cols] = scaler.fit_transform(test_df_d[important_num_col
 xgb = XGBRegressor(n_estimators=1000, learning_rate=0.01)
 
 # Fit the model on all train data (before split, U can try to train it on X_train, y_train)
-xgb.fit(X, y) 
+xgb.fit(X_train, y) 
 ```
 
 
@@ -3186,8 +2713,7 @@ xgb.fit(X, y)
 
 ```python
 # Make prediction
-predictions = xgb.predict(test_df_d)
-predictions
+predictions = xgb.predict(X_test).round()
 
 # Export results
 Submission = pd.DataFrame({ 'Id': test['Id'], 'SalePrice': predictions })
@@ -3227,27 +2753,27 @@ Submission.head()
     <tr>
       <th>0</th>
       <td>1461</td>
-      <td>130554.250000</td>
+      <td>128552.0</td>
     </tr>
     <tr>
       <th>1</th>
       <td>1462</td>
-      <td>152364.656250</td>
+      <td>157319.0</td>
     </tr>
     <tr>
       <th>2</th>
       <td>1463</td>
-      <td>185537.312500</td>
+      <td>192200.0</td>
     </tr>
     <tr>
       <th>3</th>
       <td>1464</td>
-      <td>180152.515625</td>
+      <td>191158.0</td>
     </tr>
     <tr>
       <th>4</th>
       <td>1465</td>
-      <td>187944.812500</td>
+      <td>187674.0</td>
     </tr>
   </tbody>
 </table>
@@ -3259,4 +2785,9 @@ Submission.head()
 ```python
 #Export csv file
 Submission.to_csv('submission.csv', index=False)
+```
+
+
+```python
+
 ```
